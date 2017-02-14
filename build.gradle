@@ -1,0 +1,122 @@
+buildscript {
+  repositories {
+    mavenLocal()
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+    mavenCentral()
+  }
+  
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'maven'
+apply plugin: 'signing'
+apply plugin: 'groovy'
+apply plugin: 'application'
+
+
+configurations {
+  compile {
+    transitive = true
+  }
+
+  runtime {
+    extendsFrom compile
+  }
+}
+
+sourceCompatibility = '1.7'
+targetCompatibility = '1.7'
+
+repositories {
+  mavenLocal()
+  maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+  mavenCentral()
+}
+
+dependencies {  
+    testCompile 'junit:junit:4.11'        
+}
+
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'Moka',
+                   'Implementation-Version': version
+    }
+}
+
+compileGroovy {
+  groovyOptions.javaAnnotationProcessing = true
+}
+
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+  archives javadocJar, sourcesJar
+}
+
+test {
+    systemProperties 'property': 'value'
+}
+
+signing {
+    sign configurations.archives
+}
+
+eclipse {
+  classpath {
+    defaultOutputDir = file('build/classes')
+  }
+}
+
+uploadArchives {
+  repositories {
+    mavenDeployer {
+
+      beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+      repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+        authentication(userName: ossrhUsername, password: ossrhPassword)
+      }
+
+      snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+        authentication(userName: ossrhUsername, password: ossrhPassword)
+      }
+
+      pom.project {
+        name 'Shores'
+        packaging 'jar'
+        description 'Generation framework'
+        url 'http://www.stokesdrift.com'
+        scm {
+          connection 'scm:git:git@github.com:stokesdrift/shores.git'
+          developerConnection 'scm:git:git@github.com:stokesdrift/shores.git'
+          url 'git@github.com:stokesdrift/shores.git'
+        }
+
+        licenses {
+          license {
+            name 'MIT License'
+            url 'http://www.opensource.org/licenses/mit-license.php'
+          }
+        }
+
+        developers {
+          developer {
+            id 'driedtoast'
+            name 'Daniel Marchant'
+            email 'driedtoast@gmail.com'
+          }
+        }
+      }
+    }
+  }
+}
