@@ -37,12 +37,14 @@ repositories {
 dependencies {  
   compile 'org.stokesdrift:moka:0.1.1-SNAPSHOT'        
   compile 'org.freemarker:freemarker:2.3.25-incubating'
+  compile 'com.google.code.gson:gson:2.8.0'
+  
   testCompile 'junit:junit:4.11'        
 }
 
 jar {
     manifest {
-        attributes 'Implementation-Title': 'Moka',
+        attributes 'Implementation-Title': 'Shores',
                    'Implementation-Version': version
     }
 }
