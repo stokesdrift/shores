@@ -1,4 +1,4 @@
-package com.stokesdrift.shores.parser;
+package org.stokesdrift.shores.parser;
 
 import org.junit.Test;
 import org.stokesdrift.shores.parser.SwaggerParser;

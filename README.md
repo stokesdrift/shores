@@ -27,3 +27,7 @@ TODO
 ** Example tap [https://github.com/srcclr/homebrew-srcclr/blob/master/srcclr.rb]
 ** example article [https://www.sourceclear.com/blog/distribute-your-java-app-via-brew/]
 ** homebrew how too [http://kylebebak.github.io/post/distribute-program-via-homebrew]
+
+
+Notes:
+* Airline uses guava, so use that for some of the IOC i'd need

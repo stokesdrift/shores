@@ -1,23 +1,24 @@
 package org.stokesdrift.shores;
 
-public class Shores {
+import java.util.HashMap;
+import java.util.Map;
 
+import org.stokesdrift.shores.commands.CreateCommand;
+import org.stokesdrift.shores.commands.SetupCommand;
+import org.stokesdrift.shores.commands.ShoreCommand;
+
+import io.airlift.airline.Cli;
+import io.airlift.airline.Cli.CliBuilder;
+import io.airlift.airline.Help;
+
+public class Shores implements Runnable {
+
+	private String[] args;
+	
 	public static void main(String[] args) {
-		// TODO do something
-		
-		// 1. load up the models from the open specification format
-		/**
-		 * "version": "1.0.0",
-    "title": "Swagger Petstore",
-    "description": "A sample API that uses a petstore as an example to demonstrate features in the swagger-2.0 specification",
-    "termsOfService": "http://swagger.io/terms/",
-    "contact": {
-      "name": "Swagger API Team"
-    },
-    "license": {
-      "name": "MIT"
-    }
-		 */
+		Shores shores = new Shores(args);
+		shores.run();
+
 		// 2. find template directory
 		// 3. load templates based on generator definition? 
 				// - file naming convention with model references pointing to template
@@ -29,4 +30,36 @@ public class Shores {
 			// - support generating based on new model name, make sure not to override if already exists
 	}
 	
+	
+	public Shores(String[] args) {
+		this.args = args;
+	}
+	
+	public Cli<Runnable> createRunner() {
+		
+		CliBuilder<Runnable> builder = Cli.<Runnable>builder(this.getClass().getName().toLowerCase())
+			.withDescription("Code generator")
+			.withDefaultCommand(Help.class)
+			.withCommands(SetupCommand.class, CreateCommand.class);
+				
+		return builder.build();
+	}
+	
+	
+	public void run() {
+		Cli<Runnable> cli = this.createRunner();
+		Runnable runnable = cli.parse(args);
+		
+		Map<String,String> options = new HashMap<String,String>();
+		// TODO add options from command line
+		
+		if(runnable instanceof ShoreCommand) {
+			ShoreCommand command = (ShoreCommand)runnable;
+			
+			command.setup(options);
+		}		
+		runnable.run();	
+	}
+	
+			
 }
