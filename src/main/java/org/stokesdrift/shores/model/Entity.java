@@ -1,5 +1,6 @@
 package org.stokesdrift.shores.model;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class Entity {
@@ -25,6 +26,9 @@ public class Entity {
 	}
 
 	public void addProperty(Property property) {
+		if(null == properties) {
+			properties = new HashMap<String, Property>();
+		}
 		properties.put(property.getName(), property);
 	}
 

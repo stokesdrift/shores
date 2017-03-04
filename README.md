@@ -13,7 +13,39 @@ Template language is based on freemarker.
 Models are based on the open api specifications: [https://www.openapis.org/specification/repo]
 
 
-TODO
+### App Configuration 
+Configuration is same format as the (heroku app.json)[https://devcenter.heroku.com/articles/app-json-schema] but it adds generator definitions:
+
+```
+ "dunes": [
+     { 
+        "name": "docker",
+        "location": "./docker-generator",
+        "overrides":{
+           "config-key1":"overridden value 1"
+        }
+     }
+  ]
+ ```
+ 
+ By default this file is looked at in the root of where the command is run.
+
+Directory structure of an app:
+* `app.json` - Application / Service configuration, can be setup running `shores setup`
+* `dunes/` - Directory containing generators
+* `generated/` - Directory containing the generated code 
+* `overrides/` - Directory containing specific overrides on existing generators (useful for project specific template changes)
+* `models/` - Directory containing the model definition files
+
+
+### Create a Sand Dune (aka Generator)
+
+Generator definition is based on yeoman generators with a bit of boilr mixed in. (boilr project.json)[https://github.com/tmrts/boilr-license/blob/master/project.json] setup defines the interactions with the user for values the generator needs setup. Yeoman generator config is for general setup definition.
+
+Directory structure of a sand dune:
+* `generator-definition.json` - Configuration definition file for a generator
+* `project.json` - Boilr like key value override options with defaults
+* `templates/` - Template files used by the generator
 
 ## TODO
 
