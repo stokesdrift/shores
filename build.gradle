@@ -25,8 +25,8 @@ configurations {
   }
 }
 
-sourceCompatibility = '1.7'
-targetCompatibility = '1.7'
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
 
 repositories {
   mavenLocal()
@@ -39,6 +39,8 @@ dependencies {
   compile 'org.freemarker:freemarker:2.3.25-incubating'
   compile 'com.google.code.gson:gson:2.8.0'
   compile 'io.airlift:airline:0.7'
+  compile 'commons-io:commons-io:2.5'
+  compile 'org.fusesource.jansi:jansi:1.15'
   
   testCompile 'junit:junit:4.11'        
 }

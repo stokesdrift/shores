@@ -16,6 +16,17 @@ public class AppInfo {
 	private String image;
 	private List<Dune> dunes;
 	private String logo;
+	private String basePath;
+	
+	
+	
+	public String getBasePath() {
+		return basePath;
+	}
+
+	public void setBasePath(String basePath) {
+		this.basePath = basePath;
+	}
 
 	public String getName() {
 		return name;

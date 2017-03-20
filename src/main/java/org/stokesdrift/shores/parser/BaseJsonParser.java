@@ -11,6 +11,8 @@ import com.google.gson.JsonParser;
 
 public abstract class BaseJsonParser extends BaseParser {
 
+	protected String basePath;
+	
 	@Override
 	public final void parseFile(String file) throws IOException {
 	
@@ -19,6 +21,7 @@ public abstract class BaseJsonParser extends BaseParser {
 		if(!fileObj.exists()) {
 			return;
 		}
+		basePath = fileObj.getAbsolutePath();
 		Reader reader = new FileReader(fileObj);
 		JsonElement element = parser.parse(reader);
 		this.handleRoot(element);
