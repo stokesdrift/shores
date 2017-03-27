@@ -1,5 +1,7 @@
 package org.stokesdrift.shores;
 
+import java.util.Optional;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.stokesdrift.shores.commands.CreateCommand;
@@ -17,6 +19,12 @@ public class ShoresTest {
 		
 		Assert.assertNotNull(runnable);
 		Assert.assertTrue(runnable instanceof CreateCommand);
+		
+		CreateCommand scommand = (CreateCommand)runnable;
+		Assert.assertNotNull(scommand.names);
+		Optional<String> optional = scommand.names.stream().findFirst();
+		String name = optional.get();
+		Assert.assertEquals("blah", name);
 	}
 	
 }

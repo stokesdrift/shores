@@ -85,6 +85,9 @@ public class Shores implements Runnable {
 		Map<String,String> options = new HashMap<String,String>();
 		// TODO add options from command line
 		
+		String workingDir = System.getProperty("user.dir");
+		System.out.println("Current working directory " + workingDir);
+		
 		if(runnable instanceof ShoreCommand) {
 			ShoreCommand command = (ShoreCommand)runnable;
 			

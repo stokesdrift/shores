@@ -21,7 +21,9 @@ public abstract class BaseJsonParser extends BaseParser {
 		if(!fileObj.exists()) {
 			return;
 		}
-		basePath = fileObj.getAbsolutePath();
+		
+		
+		basePath =fileObj.getParentFile().getAbsolutePath();
 		Reader reader = new FileReader(fileObj);
 		JsonElement element = parser.parse(reader);
 		this.handleRoot(element);
