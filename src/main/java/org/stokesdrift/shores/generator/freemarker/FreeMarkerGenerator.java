@@ -2,6 +2,7 @@ package org.stokesdrift.shores.generator.freemarker;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.HashMap;
@@ -24,6 +25,7 @@ public class FreeMarkerGenerator implements Generator {
 	private Configuration configuration;
 	private boolean global;
 	private File templateName;
+	private OutputStream out = null; 
 	
 	public FreeMarkerGenerator(Configuration configuration, File templateName) {
 		this(configuration, templateName, false);
@@ -40,6 +42,20 @@ public class FreeMarkerGenerator implements Generator {
 	public boolean isGlobal() {
 		return this.global;
 	}
+	
+	public void setOutputStream(OutputStream outParam) {
+		this.out = outParam;
+	}
+	
+	public OutputStream getOutputStream(Entity entity) {
+		// TODO create file name based on template path + entityName approach
+		// TODO need to get info from the dune
+		if(null == out) {
+			out = System.out;
+		}
+		return out;		
+		
+	}
 
 	@Override
 	public void generateEntity(AppInfo info, Entity entity) {
@@ -49,7 +65,8 @@ public class FreeMarkerGenerator implements Generator {
 		
 		// TODO create file name based on template path + entityName approach
 		// TODO need to get info from the dune
-		Writer out = new OutputStreamWriter(System.out);
+		
+		Writer out = new OutputStreamWriter(this.getOutputStream(entity));
 		Map<String,Object> root = new HashMap<String,Object>();
 		
 		root.put("entity", entity);
@@ -70,7 +87,7 @@ public class FreeMarkerGenerator implements Generator {
 	
 	protected Template getTemplate() {		
 		try {
-			return configuration.getTemplate(templateName.getPath() + File.separator + templateName.getName());
+			return configuration.getTemplate(templateName.getName());
 		} catch (Exception  e) {
 			throw ExceptionUtil.unchecked(e);
 		}

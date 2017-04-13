@@ -32,7 +32,8 @@ public class FreemarkerGeneratorProvider extends BaseGeneratorProvider {
 
 		configuration.setDefaultEncoding("UTF-8");
 		configuration.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
-		configuration.setLogTemplateExceptions(false);				
+		configuration.setLogTemplateExceptions(false);		
+		this.setupGenerators(directory);
 	}
 	
 	protected void setupGenerators(File directory) {
@@ -43,6 +44,7 @@ public class FreemarkerGeneratorProvider extends BaseGeneratorProvider {
 		Iterator<File> iter = files.iterator();
 		while(iter.hasNext()) {
 			File file = iter.next();
+			System.out.println("file is " + file);
 			FreeMarkerGenerator generator = new FreeMarkerGenerator(this.configuration, file);
 			this.generators.add(generator);
 		}

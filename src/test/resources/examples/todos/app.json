@@ -33,7 +33,14 @@
   "dunes": [
      { 
         "name": "docker",
-        "location": "./docker-generator",
+        "location": "docker-generator",
+        "overrides":{
+           "config-key1":"overridden value 1"
+        }
+     },
+      { 
+        "name": "helloentity",
+        "location": "helloentity",
         "overrides":{
            "config-key1":"overridden value 1"
         }

@@ -91,8 +91,8 @@ public class HerokuAppInfoParser extends BaseJsonParser implements AppInfoParser
 		array.forEach( element -> {
 			JsonObject obj = element.getAsJsonObject();
 			Dune dune = new Dune();
-			dune.setLocation(JsonUtil.getAsString(obj, "name"));
-			dune.setName(JsonUtil.getAsString(obj, "location"));
+			dune.setLocation(JsonUtil.getAsString(obj, "location"));
+			dune.setName(JsonUtil.getAsString(obj, "name"));
 			JsonObject overrides = obj.getAsJsonObject("overrides");
 			
 			Map<String,Object> values = overrides.entrySet().stream().collect(
