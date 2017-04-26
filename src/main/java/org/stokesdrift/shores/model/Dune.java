@@ -1,9 +1,6 @@
 package org.stokesdrift.shores.model;
 
-import java.util.List;
 import java.util.Map;
-
-import com.google.common.collect.Lists;
 
 /**
  * Representation of a generator that is used for generating the code 

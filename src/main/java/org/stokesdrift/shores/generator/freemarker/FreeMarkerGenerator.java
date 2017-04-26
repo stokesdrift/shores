@@ -1,6 +1,7 @@
 package org.stokesdrift.shores.generator.freemarker;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -53,13 +54,27 @@ public class FreeMarkerGenerator implements Generator {
 		this.out = outParam;
 	}
 	
-	public OutputStream getOutputStream(Entity entity, Map<String,Object> context) {
+	public OutputStream getOutputStream(AppInfo info, Entity entity, Map<String,Object> context) {
+		if (null != out) {
+			return out;
+		}
 		try {
 			Template t = new Template("filename", new StringReader(this.outputNameFormat),
 			               new Configuration(Configuration.getVersion()));
 			StringWriter writer = new StringWriter();
 			t.process(context, writer);
 			String fileName = writer.toString();
+			fileName = info.getBasePath() + File.separatorChar + fileName; 
+			File file = new File(fileName);
+			file.getParentFile().mkdirs();
+			if(file.getParentFile().exists()) {
+				if(!file.exists()) {
+					file.createNewFile();
+				}
+				System.out.println(" TEST " + file);
+				out = new FileOutputStream(file);
+			}
+			
 			// TODo create a file and render to it
 		} catch (Exception e) {
 			// TODO should i fail or keep going
@@ -87,11 +102,13 @@ public class FreeMarkerGenerator implements Generator {
 		// TODO create file name based on template path + entityName approach
 		// TODO need to get info from the dune
 		
-		Writer out = new OutputStreamWriter(this.getOutputStream(entity, root));
+		Writer out = new OutputStreamWriter(this.getOutputStream(info, entity, root));
 	
 		
 		try {
 			template.process(root, out);
+			out.close();
+			out = null;
 		} catch (Exception e) {
 			throw ExceptionUtil.unchecked(e);
 		}

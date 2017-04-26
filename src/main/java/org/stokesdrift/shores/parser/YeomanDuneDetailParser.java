@@ -1,12 +1,10 @@
 package org.stokesdrift.shores.parser;
 
-import java.io.File;
 import java.util.Map;
 
 import org.stokesdrift.shores.model.AppInfo;
 import org.stokesdrift.shores.model.Dune;
 import org.stokesdrift.shores.model.DuneDetail;
-import org.stokesdrift.shores.util.ExceptionUtil;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;

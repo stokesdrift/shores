@@ -38,7 +38,7 @@ public abstract class BaseGeneratorProvider implements GeneratorProvider {
 		this.appInfo = info;
 		this.dune = dune;
 		
-		if (null != dune.getDetails()) {
+		if (null == dune.getDetails()) {
 			DuneUtil.fillOutDetails(info, dune);
 		}
 	}

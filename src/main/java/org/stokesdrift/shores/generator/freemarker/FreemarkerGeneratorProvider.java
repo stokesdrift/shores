@@ -26,8 +26,9 @@ public class FreemarkerGeneratorProvider extends BaseGeneratorProvider {
 		configuration = new Configuration(Configuration.VERSION_2_3_25);
 		
 		// TODO make details useful 
-		this.fillOutDetails(info, dune);
 		File directory = new File(DuneUtil.getFullLocation(info, dune));
+
+		this.fillOutDetails(info, dune);
 		configuration.setDirectoryForTemplateLoading(directory);
 
 		configuration.setDefaultEncoding("UTF-8");

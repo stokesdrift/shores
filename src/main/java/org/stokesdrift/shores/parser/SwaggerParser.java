@@ -3,7 +3,6 @@ package org.stokesdrift.shores.parser;
 import java.util.Map;
 import java.util.Set;
 
-import org.stokesdrift.shores.model.AppInfo;
 import org.stokesdrift.shores.model.Entity;
 import org.stokesdrift.shores.model.Property;
 import org.stokesdrift.shores.util.JsonUtil;
@@ -11,8 +10,6 @@ import org.stokesdrift.shores.util.JsonUtil;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
-import freemarker.core.JSONOutputFormat;
 
 public class SwaggerParser extends BaseJsonParser {
 

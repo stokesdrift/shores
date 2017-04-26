@@ -19,6 +19,7 @@ public class DuneUtil {
 		DuneParser parser = null;
 		String generatorFile = null;
 		// Check file and get right parser
+		
 		if(existsFor(YeomanDuneDetailParser.FILE_NAME, dune)) {
 			parser = new YeomanDuneDetailParser();
 			generatorFile = YeomanDuneDetailParser.FILE_NAME;

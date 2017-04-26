@@ -8,8 +8,7 @@
   "filenames" : {
     "hello.ftl" : "Hello${entity.name}.java"
    },	
-  "globals" : {
-  },	  
+  "globals" : [],	  
   "keywords": ["yeoman-generator"],
   "dependencies": {
     "yeoman-generator": "^1.0.0"
