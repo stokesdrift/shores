@@ -5,6 +5,11 @@
   "files": [
     "generators"
   ],
+  "filenames" : {
+    "hello.ftl" : "Hello${entity.name}.java"
+   },	
+  "globals" : {
+  },	  
   "keywords": ["yeoman-generator"],
   "dependencies": {
     "yeoman-generator": "^1.0.0"

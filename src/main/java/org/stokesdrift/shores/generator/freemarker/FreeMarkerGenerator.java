@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +21,7 @@ import freemarker.template.MalformedTemplateNameException;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateNotFoundException;
+import freemarker.template.Version;
 
 public class FreeMarkerGenerator implements Generator {
 
@@ -26,15 +29,18 @@ public class FreeMarkerGenerator implements Generator {
 	private boolean global;
 	private File templateName;
 	private OutputStream out = null; 
+	private String outputNameFormat = null;
 	
-	public FreeMarkerGenerator(Configuration configuration, File templateName) {
-		this(configuration, templateName, false);
+	
+	public FreeMarkerGenerator(Configuration configuration, File templateName, String outputNameFormat) {
+		this(configuration, templateName, false, outputNameFormat);
 	}
 	
-	public FreeMarkerGenerator(Configuration configuration, File templateName, boolean isGlobal) {
+	public FreeMarkerGenerator(Configuration configuration, File templateName, boolean isGlobal, String outputNameFormat) {
 		this.configuration = configuration;
 		this.global = isGlobal;
 		this.templateName = templateName;
+		this.outputNameFormat = outputNameFormat;
 	}
 	
 	
@@ -47,7 +53,18 @@ public class FreeMarkerGenerator implements Generator {
 		this.out = outParam;
 	}
 	
-	public OutputStream getOutputStream(Entity entity) {
+	public OutputStream getOutputStream(Entity entity, Map<String,Object> context) {
+		try {
+			Template t = new Template("filename", new StringReader(this.outputNameFormat),
+			               new Configuration(Configuration.getVersion()));
+			StringWriter writer = new StringWriter();
+			t.process(context, writer);
+			String fileName = writer.toString();
+			// TODo create a file and render to it
+		} catch (Exception e) {
+			// TODO should i fail or keep going
+			ExceptionUtil.unchecked(e);
+		}
 		// TODO create file name based on template path + entityName approach
 		// TODO need to get info from the dune
 		if(null == out) {
@@ -61,16 +78,17 @@ public class FreeMarkerGenerator implements Generator {
 	public void generateEntity(AppInfo info, Entity entity) {
 		// TODO need to do some configuration based on template name
 		Template template = this.getTemplate();
+	    Map<String,Object> root = new HashMap<String,Object>();
+		
+		root.put("entity", entity);
+		root.put("appinfo", info);
 		// File output, need to create a file / directory structure
 		
 		// TODO create file name based on template path + entityName approach
 		// TODO need to get info from the dune
 		
-		Writer out = new OutputStreamWriter(this.getOutputStream(entity));
-		Map<String,Object> root = new HashMap<String,Object>();
-		
-		root.put("entity", entity);
-		root.put("appinfo", info);
+		Writer out = new OutputStreamWriter(this.getOutputStream(entity, root));
+	
 		
 		try {
 			template.process(root, out);

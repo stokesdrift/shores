@@ -31,14 +31,5 @@ public class ListCommand extends BaseCommand {
 	}
 
 	
-	public Map<String,Entity> getEntities() {
-		ModelParser modelParser = new AggregatedModelParser(this.getAppInfo());
-		try {
-			modelParser.parseFile(null);
-		} catch (IOException e) {
-			ExceptionUtil.unchecked(e);
-		}
-		Map<String,Entity> entities = modelParser.getEntities();
-		return entities;
-	}
+	
 }

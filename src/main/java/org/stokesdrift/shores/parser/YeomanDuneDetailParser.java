@@ -1,10 +1,16 @@
 package org.stokesdrift.shores.parser;
 
+import java.io.File;
+import java.util.Map;
+
 import org.stokesdrift.shores.model.AppInfo;
 import org.stokesdrift.shores.model.Dune;
 import org.stokesdrift.shores.model.DuneDetail;
+import org.stokesdrift.shores.util.ExceptionUtil;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 /**
  * {
@@ -14,6 +20,10 @@ import com.google.gson.JsonElement;
   "files": [
     "generators"
   ],
+  "filenames": {
+     "filename.ftl": "Hello${entity.name}.java",
+  },
+  "globals": [ "filenameglobal.ftl" ],
   "keywords": ["yeoman-generator"],
   "dependencies": {
     "yeoman-generator": "^1.0.0"
@@ -34,7 +44,18 @@ public class YeomanDuneDetailParser extends BaseJsonParser implements DuneParser
 	public void handleRoot(JsonElement element) {
 		detail = new DuneDetail();
 		
-		// TODO parse it
+		JsonObject jobj = element.getAsJsonObject();	
+		JsonArray jarray = jobj.getAsJsonArray("globals");
+		if(null != jarray) {
+			for(JsonElement elem: jarray) {
+				detail.getGlobalTemplates().add(elem.getAsString());
+			}
+		}
+		
+		JsonObject filenames = jobj.getAsJsonObject("filenames");
+		for(Map.Entry<String, JsonElement> mapentry: filenames.entrySet()) {
+			detail.getFileFormats().put(mapentry.getKey(), mapentry.getValue().getAsString());
+		}
 		
 		dune.setDetails(detail);
 
@@ -44,9 +65,8 @@ public class YeomanDuneDetailParser extends BaseJsonParser implements DuneParser
 	public void init(AppInfo info, Dune dune) {
 		this.appInfo = info;
 		this.dune = dune;
-		
 	}
-
+	
 	@Override
 	public DuneDetail getDuneDetail() {
 		return detail;

@@ -5,13 +5,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.stokesdrift.shores.generator.BaseGeneratorProvider;
 import org.stokesdrift.shores.generator.Generator;
 import org.stokesdrift.shores.model.AppInfo;
 import org.stokesdrift.shores.model.Dune;
+import org.stokesdrift.shores.util.DuneUtil;
 
 import freemarker.template.Configuration;
 import freemarker.template.TemplateExceptionHandler;
@@ -27,7 +27,7 @@ public class FreemarkerGeneratorProvider extends BaseGeneratorProvider {
 		
 		// TODO make details useful 
 		this.fillOutDetails(info, dune);
-		File directory = new File(this.getFullLocation(info, dune));
+		File directory = new File(DuneUtil.getFullLocation(info, dune));
 		configuration.setDirectoryForTemplateLoading(directory);
 
 		configuration.setDefaultEncoding("UTF-8");
@@ -35,6 +35,7 @@ public class FreemarkerGeneratorProvider extends BaseGeneratorProvider {
 		configuration.setLogTemplateExceptions(false);		
 		this.setupGenerators(directory);
 	}
+	
 	
 	protected void setupGenerators(File directory) {
 		Collection<File> files = FileUtils.listFiles(directory, new String[] { "ftl" }, true);		
@@ -44,8 +45,10 @@ public class FreemarkerGeneratorProvider extends BaseGeneratorProvider {
 		Iterator<File> iter = files.iterator();
 		while(iter.hasNext()) {
 			File file = iter.next();
-			System.out.println("file is " + file);
-			FreeMarkerGenerator generator = new FreeMarkerGenerator(this.configuration, file);
+			System.out.println("generating using: " + file);
+			String outputFileName = this.dune.getDetails().getFileFormats().get(file.getName());
+			boolean global = this.dune.getDetails().getGlobalTemplates().contains(file.getName());
+			FreeMarkerGenerator generator = new FreeMarkerGenerator(this.configuration, file, global, outputFileName);
 			this.generators.add(generator);
 		}
 		

@@ -1,5 +1,6 @@
 package org.stokesdrift.shores.parser;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -7,6 +8,7 @@ import java.util.stream.Collectors;
 
 import org.stokesdrift.shores.model.AppInfo;
 import org.stokesdrift.shores.model.Dune;
+import org.stokesdrift.shores.util.ExceptionUtil;
 import org.stokesdrift.shores.util.JsonUtil;
 
 import com.google.gson.JsonArray;
@@ -104,5 +106,7 @@ public class HerokuAppInfoParser extends BaseJsonParser implements AppInfoParser
 		});
 		appInfo.setDunes(dunes);
 	}
+	
+	
 
 }

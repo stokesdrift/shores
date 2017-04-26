@@ -1,8 +1,20 @@
 package org.stokesdrift.shores.model;
 
+import java.util.List;
 import java.util.Map;
 
+import com.google.common.collect.Lists;
+
+/**
+ * Representation of a generator that is used for generating the code 
+ * 
+ * @author driedtoast
+ *
+ */
 public class Dune {
+	
+	public static final String DUNE_DIRECTORY = "dunes"; 
+	
 
 	private String name;
 	private String location;
@@ -10,7 +22,6 @@ public class Dune {
 	private String fullPath;
 	
 	private DuneDetail details;
-	
 	
 	public DuneDetail getDetails() {
 		return details;

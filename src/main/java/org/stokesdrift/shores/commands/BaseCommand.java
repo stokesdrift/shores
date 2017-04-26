@@ -5,8 +5,11 @@ import java.util.Map;
 
 import org.stokesdrift.shores.config.Config;
 import org.stokesdrift.shores.model.AppInfo;
+import org.stokesdrift.shores.model.Entity;
+import org.stokesdrift.shores.parser.AggregatedModelParser;
 import org.stokesdrift.shores.parser.AppInfoParser;
 import org.stokesdrift.shores.parser.HerokuAppInfoParser;
+import org.stokesdrift.shores.parser.ModelParser;
 import org.stokesdrift.shores.util.ExceptionUtil;
 
 import io.airlift.airline.Option;
@@ -70,6 +73,15 @@ public abstract class BaseCommand implements ShoreCommand {
 		this.options = options;
 	}
 	
-	
+	public Map<String,Entity> getEntities() {
+		ModelParser modelParser = new AggregatedModelParser(this.getAppInfo());
+		try {
+			modelParser.parseFile(null);
+		} catch (IOException e) {
+			ExceptionUtil.unchecked(e);
+		}
+		Map<String,Entity> entities = modelParser.getEntities();
+		return entities;
+	}
 
 }
