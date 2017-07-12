@@ -6,7 +6,7 @@
     "generators"
   ],
   "filenames" : {
-    "hello.ftl" : "Hello${entity.name}.java"
+    "hello.ftl" : "com/blah/Hello${entity.name}.java"
    },	
   "globals" : [],	  
   "keywords": ["yeoman-generator"],

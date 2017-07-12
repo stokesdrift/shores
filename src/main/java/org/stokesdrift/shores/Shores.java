@@ -44,7 +44,6 @@ public class Shores implements Runnable {
 	public Shores(String[] args) {
 		this.args = args;
 	}
-	
 	public Cli<Runnable> createRunner() throws IOException {
 		String workingDir = System.getProperty("user.dir");
 		System.out.println("Running from: " + workingDir);
@@ -55,14 +54,12 @@ public class Shores implements Runnable {
 		ImmutableSet<ClassInfo> classes = path.getTopLevelClasses(pkg.getName());
 		
 		List<Class<? extends Runnable>> commandClasses = classes.stream().filter(classInfo -> {
-			Class cls = convertToClass(classInfo);
+			Class<? extends Runnable> cls = convertToClass(classInfo);
 			if (isCommandClass(cls)) {
 				return true;
 			}
 			return false;					
 		}).map(c -> convertToClass(c)).collect(Collectors.toList());
-		
-		
 		
 		CliBuilder<Runnable> builder = Cli.<Runnable>builder(this.getClass().getName().toLowerCase())
 			.withDescription("Code generator")
@@ -101,11 +98,11 @@ public class Shores implements Runnable {
 		return (!Modifier.isAbstract(cls.getModifiers()) && !Modifier.isInterface(cls.getModifiers()) && cls.isAnnotationPresent(Command.class));
 	}
 	
-	protected Class convertToClass(ClassInfo ci) {
+	protected Class<? extends Runnable> convertToClass(ClassInfo ci) {
 		String className = ci.getName();
-		Class cls = null;
+		Class<? extends Runnable> cls = null;
 		try {
-			cls = Class.forName(className);
+			cls = (Class<? extends Runnable>)Class.forName(className);
 		} catch (ClassNotFoundException e) {
 			throw ExceptionUtil.unchecked(e);
 		}

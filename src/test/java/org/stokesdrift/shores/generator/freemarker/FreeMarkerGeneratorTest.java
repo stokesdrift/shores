@@ -72,7 +72,7 @@ public class FreeMarkerGeneratorTest {
 		entity.setName("world");
 		generator.generateEntity(appInfo, entity);
 		
-		String expectedFileName = appInfo.getBasePath() + File.separatorChar + "Helloworld.java";
+		String expectedFileName = appInfo.getBasePath() + File.separatorChar + "com/blah/Helloworld.java";
 		Assert.assertTrue(new File(expectedFileName).exists());
 		new File(expectedFileName).delete();
 		
