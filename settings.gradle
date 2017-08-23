@@ -1,0 +1,12 @@
+pluginManagement {
+ repositories {
+    //mavenLocal()
+    gradlePluginPortal()
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+    maven { url 'https://oss.sonatype.org/content/repositories/releases' }
+    // mavenCentral()
+    maven { url "https://jitpack.io" }
+    maven { url "https://plugins.gradle.org/m2/" }
+  }
+ 
+}

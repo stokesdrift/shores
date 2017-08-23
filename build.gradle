@@ -2,56 +2,79 @@ buildscript {
   repositories {
     mavenLocal()
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+    maven { url 'https://oss.sonatype.org/content/repositories/releases' }
     mavenCentral()
+    maven { url "https://jitpack.io" }
     maven { url "https://plugins.gradle.org/m2/" }
   }
-  dependencies {
-   classpath "us.kirchmeier:gradle-capsule-plugin:1.0.2"
-  }
+}
+// gradle.plugin.
+plugins {
+  id "com.scrain.checksum-plugin" version "0.6"  
+  id "com.github.johnrengelman.shadow" version "2.0.1"
+  id 'java'
+  id 'eclipse'
+  id 'maven-publish'
+  id 'signing'
+  id 'groovy'
+  id 'application'
+  id "com.jfrog.bintray" version "1.7.3"
+
 }
 
-apply plugin: 'java'
-apply plugin: 'eclipse'
-apply plugin: 'maven'
-apply plugin: 'signing'
-apply plugin: 'groovy'
-apply plugin: 'application'
-apply plugin: "us.kirchmeier.capsule"
+bintray {
+    user = System.getenv('BINTRAY_USER')
+    key = System.getenv('BINTRAY_KEY')
+    pkg {
+        repo = 'shores'
+        name = 'shores'
+        userOrg = 'stokesdrift'
+        licenses = ['MIT']
+        vcsUrl = 'https://github.com/stokesdrift/shores.git'
+        version {
+           name = version
+           released  = new Date()
+           // vcsTag = '1.3.0'
+        }
+    }
+    configurations = ['archives']
+}
+
 
 mainClassName = "org.stokesdrift.shores.Shore"
 
-task fatCapsule(type: FatCapsule) {
-  applicationClass mainClassName
-  baseName 'shores'
-  from jar
-  from { configurations.runtime } 
-  
-  capsuleManifest {
-    systemProperties['java.awt.headless'] = true
-    // systemProperties['log4j.configuration'] = 'log4j.xml'
-    // args = ['--very-fancy']
-    minJavaVersion = '1.8.0'
-  }
+
+checksum {
+    algorithm 'SHA-256'
+    defaultSource 'auto'
+    tasks {
+        jar {}  // will create a checksum for the jar task
+        shadowJar {}  // will create a checksum for the jar task
+ 
+    }
 }
 
 configurations {
   compile {
     transitive = true
   }
-
+  
   runtime {
     extendsFrom compile
   }
 }
 
-sourceCompatibility = '1.8'
-targetCompatibility = '1.8'
-
 repositories {
   mavenLocal()
   maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
   mavenCentral()
+  maven { url "https://jitpack.io" }
+  maven { url "https://plugins.gradle.org/m2/" }
+  
 }
+
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
 
 dependencies {  
   compile 'org.stokesdrift:moka:0.1.1-SNAPSHOT'        
@@ -85,25 +108,95 @@ task sourcesJar(type: Jar) {
     from sourceSets.main.allSource
 }
 
+shadowJar {
+  baseName = "${project.name}-all"
+  classifier = ''
+}
+
 artifacts {
-  archives javadocJar, sourcesJar, fatCapsule
+  archives javadocJar, sourcesJar, shadowJar, jar
 }
 
 test {
     systemProperties 'property': 'value'
 }
 
+eclipse {
+  classpath {
+  }
+}
+
 signing {
     sign configurations.archives
 }
 
-eclipse {
-  classpath {
-    defaultOutputDir = file('build/classes')
-  }
+task createChecksums(dependsOn: [shadowJar]) {
+    description = "Creates SHA-256 checksums for all artifacts"
+    doLast {
+        fileTree(project.buildDir).files.each { File f ->
+            if (f.name.toLowerCase().endsWith('.jar')) {
+                ant.checksum file: f, algorithm: 'SHA-256', fileext: '.sha256'
+            }
+        }
+    }
 }
 
-uploadArchives {
+
+
+publishing {
+    publications {
+		jar(MavenPublication) {
+			from components.java
+			groupId group
+            artifactId archivesBaseName
+			version version
+			pom.withXml {
+                asNode().children().last() + {
+                    resolveStrategy = Closure.DELEGATE_FIRST
+                    name 'Shores'
+                    description 'Generation Framework'
+                    url 'http://www.stokesdrift.com'
+                    scm {
+                        connection 'scm:git:git@github.com:stokesdrift/shores.git'
+          				developerConnection 'scm:git:git@github.com:stokesdrift/shores.git'
+          				url 'git@github.com:stokesdrift/shores.git'
+                    }
+                    licenses {
+                        license {
+                             name 'MIT License'
+            				 url 'http://www.opensource.org/licenses/mit-license.php'
+                        }
+                    }
+                    developers {
+                        developer {
+                            id 'driedtoast'
+            				name 'Daniel Marchant'
+            				email 'driedtoast@gmail.com'
+                        }
+                    }
+                }
+            }
+			
+		}
+		
+
+	}
+	
+	repositories {
+		maven {
+		    url "https://oss.sonatype.org/content/repositories/snapshots/"
+	  		// repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+        	credentials { 
+        		username ossrhUsername
+        		password ossrhPassword
+        	}
+        }
+    }
+}
+
+
+/* uploadArchives {
+
   repositories {
     mavenDeployer {
 
@@ -146,3 +239,4 @@ uploadArchives {
     }
   }
 }
+*/
