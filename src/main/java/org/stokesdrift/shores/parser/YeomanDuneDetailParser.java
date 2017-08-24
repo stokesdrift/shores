@@ -5,6 +5,7 @@ import java.util.Map;
 import org.stokesdrift.shores.model.AppInfo;
 import org.stokesdrift.shores.model.Dune;
 import org.stokesdrift.shores.model.DuneDetail;
+import org.stokesdrift.shores.model.RunMode;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -15,6 +16,9 @@ import com.google.gson.JsonObject;
   "name": "docker-generator",
   "version": "0.1.0",
   "description": "",
+  "modes": [
+    "create", "update"
+  ],
   "files": [
     "generators"
   ],
@@ -47,6 +51,16 @@ public class YeomanDuneDetailParser extends BaseJsonParser implements DuneParser
 		if(null != jarray) {
 			for(JsonElement elem: jarray) {
 				detail.getGlobalTemplates().add(elem.getAsString());
+			}
+		}
+		
+		jarray = jobj.getAsJsonArray("modes");
+		if(null != jarray) {
+			for(JsonElement elem: jarray) {
+				RunMode mode = RunMode.valueOf(elem.getAsString().toUpperCase());
+				if(mode != null && !detail.getSupportedModes().contains(mode)) {
+					detail.getSupportedModes().add(mode);
+				}
 			}
 		}
 		

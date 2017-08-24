@@ -25,7 +25,7 @@ public class ListCommand extends BaseCommand {
 		AnsiConsole.systemInstall();
 		Map<String,Entity> entities = this.getEntities();
 		for(Entity entity: entities.values()) {
-			System.out.println( ansi().eraseScreen().fg(Color.DEFAULT).a(INTENSITY_BOLD).a(entity.getName()).reset());
+			System.out.println( ansi().fg(Color.DEFAULT).a(INTENSITY_BOLD).a(entity.getName()).reset());
 		}	
 		AnsiConsole.systemUninstall();
 	}

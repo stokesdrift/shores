@@ -1,15 +1,22 @@
 package org.stokesdrift.shores.commands;
 
+import static org.fusesource.jansi.Ansi.ansi;
+import static org.fusesource.jansi.Ansi.Attribute.INTENSITY_BOLD;
+
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
+import org.fusesource.jansi.Ansi.Color;
 import org.stokesdrift.shores.config.Config;
 import org.stokesdrift.shores.model.AppInfo;
+import org.stokesdrift.shores.model.Dune;
 import org.stokesdrift.shores.model.Entity;
 import org.stokesdrift.shores.parser.AggregatedModelParser;
 import org.stokesdrift.shores.parser.AppInfoParser;
 import org.stokesdrift.shores.parser.HerokuAppInfoParser;
 import org.stokesdrift.shores.parser.ModelParser;
+import org.stokesdrift.shores.util.DuneUtil;
 import org.stokesdrift.shores.util.ExceptionUtil;
 
 import io.airlift.airline.Option;
@@ -82,6 +89,18 @@ public abstract class BaseCommand implements ShoreCommand {
 		}
 		Map<String,Entity> entities = modelParser.getEntities();
 		return entities;
+	}
+	
+	
+	public void washupToDunes(AppInfo info) {
+		List<Dune> dunes = info.getDunes();
+		if(null != dunes) {
+			for(Dune dune: dunes) {
+				System.out.println( ansi().fg(Color.DEFAULT).a("Loading dune: ").a(INTENSITY_BOLD).a(dune.getName()).reset());
+				DuneUtil.getFullLocation(info, dune);
+				DuneUtil.fillOutDetails(info, dune);
+			}
+		}
 	}
 
 }

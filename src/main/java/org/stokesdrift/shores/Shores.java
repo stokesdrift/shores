@@ -1,5 +1,8 @@
 package org.stokesdrift.shores;
 
+import static org.fusesource.jansi.Ansi.ansi;
+import static org.fusesource.jansi.Ansi.Attribute.INTENSITY_BOLD;
+
 import java.io.IOException;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
@@ -7,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.fusesource.jansi.Ansi.Color;
 import org.stokesdrift.shores.commands.CreateCommand;
 import org.stokesdrift.shores.commands.SetupCommand;
 import org.stokesdrift.shores.commands.ShoreCommand;
@@ -90,7 +94,13 @@ public class Shores implements Runnable {
 			
 			command.setup(options);
 		}		
-		runnable.run();	
+		try {
+			runnable.run();
+		} catch(Throwable t) {
+			System.out.println( ansi().fg(Color.RED).a("Command failed: " + t.getMessage()).reset());
+			t.printStackTrace();			
+		}
+		System.out.println( ansi().fg(Color.GREEN).a("Shores are complete!").reset());
 	}
 	
 	

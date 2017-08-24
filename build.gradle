@@ -41,7 +41,7 @@ bintray {
 }
 
 
-mainClassName = "org.stokesdrift.shores.Shore"
+mainClassName = "org.stokesdrift.shores.Shores"
 
 
 checksum {

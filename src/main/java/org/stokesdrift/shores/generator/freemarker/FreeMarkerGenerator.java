@@ -71,7 +71,7 @@ public class FreeMarkerGenerator implements Generator {
 				if(!file.exists()) {
 					file.createNewFile();
 				}
-				System.out.println(" TEST " + file);
+				System.out.println(" creating file... " + file);
 				out = new FileOutputStream(file);
 			}
 			
@@ -102,12 +102,13 @@ public class FreeMarkerGenerator implements Generator {
 		// TODO create file name based on template path + entityName approach
 		// TODO need to get info from the dune
 		
-		Writer out = new OutputStreamWriter(this.getOutputStream(info, entity, root));
+		out = this.getOutputStream(info, entity, root);
+		Writer outWriter = new OutputStreamWriter(out);
 	
 		
 		try {
-			template.process(root, out);
-			out.close();
+			template.process(root, outWriter);
+			outWriter.close();
 			out = null;
 		} catch (Exception e) {
 			throw ExceptionUtil.unchecked(e);

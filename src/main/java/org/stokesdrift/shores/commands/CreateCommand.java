@@ -38,45 +38,46 @@ public class CreateCommand extends BaseCommand {
 		List<Entity> entityList = new ArrayList<Entity>();
 		if (null != names && names.size() > 0) {
 			for(String name: names) {
+			  System.out.println( ansi().fg(Color.GREEN).a("Generating entity: ").a(INTENSITY_BOLD).a(name).reset());
 			  Entity entity = entities.get(name);
 			  if(null != entity) {
 			    entityList.add(entity);
 			  }
 			}
 		} else {
+			System.out.println( ansi().fg(Color.GREEN).a("Generating all entities ").reset());
 			entityList.addAll(entities.values());
 		}
 		
 		AppInfo appInfo = this.getAppInfo();
 		this.washupToDunes(appInfo);
 		
+		if(appInfo.getDunes() == null || appInfo.getDunes().size() == 0) {
+			System.out.println( ansi().fg(Color.RED).a("No dunes found").reset());
+			
+		}
+		
 		for(Dune dune : appInfo.getDunes() ) {
+			System.out.println(" Details? " + dune.getDetails());
 			if(null == dune.getDetails() || 
 					!dune.getDetails().getSupportedModes().contains(RunMode.CREATE)) {
+				System.out.println( ansi().fg(Color.RED).a("Dune doesn't support create: ").a(INTENSITY_BOLD).a(dune.getName()).reset());
+					
 				continue;
 			}
-			System.out.println( ansi().eraseScreen().fg(Color.DEFAULT).a("Runninng dune: ").a(INTENSITY_BOLD).a(dune.getName()).reset());
+			System.out.println( ansi().fg(Color.DEFAULT).a("Runninng dune: ").a(INTENSITY_BOLD).a(dune.getName()).reset());
 			
 			generatorProvider = new FreemarkerGeneratorProvider();
 			try {
 				generatorProvider.init(appInfo, dune);
 				this.runGenerators(generatorProvider, entityList);				
 			} catch (IOException e) {
-				System.out.println( ansi().eraseScreen().fg(Color.RED).a("Dune failed: " + e.getMessage()).a(INTENSITY_BOLD).a(dune.getName()).reset());					
+				System.out.println( ansi().fg(Color.RED).a("Dune failed: " + e.getMessage()).a(INTENSITY_BOLD).a(dune.getName()).reset());					
 			}
 			
 			
 		}
 		AnsiConsole.systemUninstall();
-	}
-	
-	public void washupToDunes(AppInfo info) {
-		List<Dune> dunes = info.getDunes();
-		if(null != dunes) {
-			for(Dune dune: dunes) {
-				DuneUtil.fillOutDetails(info, dune);
-			}
-		}
 	}
 
 	
@@ -85,7 +86,7 @@ public class CreateCommand extends BaseCommand {
 		List<Generator> generators = provider.getEntityGenerators();
 		for(Generator generator : generators) {
 			for(Entity entity: entities) {
-				System.out.println( ansi().eraseScreen().fg(Color.DEFAULT).a("Generating: ").a(INTENSITY_BOLD).a(entity.getName()).reset());				
+				System.out.println( ansi().fg(Color.DEFAULT).a("Generating: ").a(INTENSITY_BOLD).a(entity.getName()).reset());				
 				generator.generateEntity(getAppInfo(), entity);
 			}
 		}
