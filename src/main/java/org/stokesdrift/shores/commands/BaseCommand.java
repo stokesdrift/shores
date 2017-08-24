@@ -3,6 +3,7 @@ package org.stokesdrift.shores.commands;
 import static org.fusesource.jansi.Ansi.ansi;
 import static org.fusesource.jansi.Ansi.Attribute.INTENSITY_BOLD;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -63,7 +64,7 @@ public abstract class BaseCommand implements ShoreCommand {
 			}
 			AppInfoParser parser = new HerokuAppInfoParser();
 			try {
-				parser.parseFile(this.applicationConfigFile);
+				parser.parseFile(options.get(WORKING_DIR) + File.separator + this.applicationConfigFile);
 				appInfo = parser.getAppInfo(); 
 			} catch (IOException e) {
 				ExceptionUtil.unchecked(e);

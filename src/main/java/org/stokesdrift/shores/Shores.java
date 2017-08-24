@@ -87,6 +87,7 @@ public class Shores implements Runnable {
 		// TODO add options from command line
 		
 		String workingDir = System.getProperty("user.dir");
+		options.put(ShoreCommand.WORKING_DIR, workingDir);
 		System.out.println("Current working directory " + workingDir);
 		
 		if(runnable instanceof ShoreCommand) {
