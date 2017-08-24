@@ -28,6 +28,8 @@ public abstract class BaseCommand implements ShoreCommand {
 	private AppInfo appInfo;
 	private Map<String,String> options;
 
+	public static final String DEFAULT_APP_FILE = "app.json";
+	
 	
 	@Option(type = OptionType.GLOBAL, name = "-c", description="Configuration file location")
 	public String configFile;
@@ -56,6 +58,9 @@ public abstract class BaseCommand implements ShoreCommand {
 
 	public AppInfo getAppInfo()  {
 		if(appInfo == null) {			
+			if(null == applicationConfigFile) {
+				this.applicationConfigFile = DEFAULT_APP_FILE;
+			}
 			AppInfoParser parser = new HerokuAppInfoParser();
 			try {
 				parser.parseFile(this.applicationConfigFile);
