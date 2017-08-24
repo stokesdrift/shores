@@ -1,6 +1,8 @@
 package org.stokesdrift.shores.model;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Header info
@@ -17,9 +19,17 @@ public class AppInfo {
 	private List<Dune> dunes;
 	private String logo;
 	private String basePath;
+	private Map<String, String> rootDirs = new HashMap<String,String>();
 	
 	
-	
+	public Map<String, String> getRootDirs() {
+		return rootDirs;
+	}
+
+	public void setRootDirs(Map<String, String> rootDirs) {
+		this.rootDirs = rootDirs;
+	}
+
 	public String getBasePath() {
 		return basePath;
 	}

@@ -11,10 +11,12 @@ import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.io.IOUtils;
 import org.stokesdrift.shores.generator.Generator;
 import org.stokesdrift.shores.model.AppInfo;
 import org.stokesdrift.shores.model.Entity;
 import org.stokesdrift.shores.util.ExceptionUtil;
+import org.stokesdrift.shores.util.FileUtil;
 
 import freemarker.core.ParseException;
 import freemarker.template.Configuration;
@@ -64,7 +66,18 @@ public class FreeMarkerGenerator implements Generator {
 			StringWriter writer = new StringWriter();
 			t.process(context, writer);
 			String fileName = writer.toString();
-			fileName = info.getBasePath() + File.separatorChar + fileName; 
+			
+			String basePath = info.getBasePath();
+			String ext = FileUtil.getExtension(fileName);
+			if(null != ext) {
+				String basePathExt = info.getRootDirs().get(ext);
+				if(null != basePathExt) {
+					basePath = basePath + File.separator + basePathExt;
+				}
+			}
+			
+			
+			fileName = basePath + File.separatorChar + fileName; 
 			File file = new File(fileName);
 			file.getParentFile().mkdirs();
 			if(file.getParentFile().exists()) {

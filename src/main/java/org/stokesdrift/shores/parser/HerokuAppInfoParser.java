@@ -2,6 +2,7 @@ package org.stokesdrift.shores.parser;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -50,6 +51,9 @@ import com.google.gson.JsonObject;
       }
     }
   },
+  "rootdirs" : {
+    "ext":"src/ext"
+  },
   "dunes": [
      { 
         "name": "docker",
@@ -72,11 +76,29 @@ public class HerokuAppInfoParser extends BaseJsonParser implements AppInfoParser
 		appInfo.setImage(JsonUtil.getAsString(allData, "image"));
 		this.setAppInfo(appInfo);
 		this.parseDunes(appInfo, allData.getAsJsonArray("dunes"));
+		this.parseRootDirs(appInfo, allData.getAsJsonObject("rootdirs"));
 		appInfo.setBasePath(basePath);
 		
 		// TODO parse environment variables
 		// TODO parse keywords and add sites
 		
+		
+	}
+	
+	/**
+	 * Used for global defaults for all the source dirs based on file extension 
+	 * 
+	 */
+	protected void parseRootDirs(AppInfo appInfo, JsonObject obj) {
+		if(null == obj) {
+			return;
+		}
+		
+		Iterator<Map.Entry<String,JsonElement>> iter = obj.entrySet().iterator();
+		while(iter.hasNext()) {
+			Map.Entry<String, JsonElement> element = iter.next();
+			appInfo.getRootDirs().put(element.getKey(), element.getValue().getAsString());
+		}
 		
 	}
 	
